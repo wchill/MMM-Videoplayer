@@ -11,7 +11,7 @@
  */
 Module.register("MMM-Videoplayer", {
 	defaults: {
-		defaultvideo: "/modules/MMM-Videoplayer/video/mov_bbb.mp4",
+		defaultvideo: "background.mp4",
 		//video: "/modules/MMM-Videoplayer/video/mov_bbb.mp4", // This can also be a link to a mp4 file on the internet.
 		//videolist: ["/modules/MMM-Videoplayer/video/test01.mp4", "/modules/MMM-Videoplayer/video/test02.mp4", "/modules/MMM-Videoplayer/video/test03.mp4"], // Can also be links to a mp4 files on the internet.
 		random: false, // Play the videos randomly. 
@@ -25,6 +25,12 @@ Module.register("MMM-Videoplayer", {
 		pauseonhide: true, // If true the module will pause the video when hidden.
 		resumeonshow: true,  // If true the module will resume the video when shown.
 		notification: "VIDEOPLAYER1", // Unique notification string for this player.
+	},
+
+	normalize: function(url) {
+		if (url.startsWith("http")) return url;
+		if (url.startsWith("/")) return url;
+		return "/modules/MMM-Videoplayer/video/" + url;
 	},
 
 	// Loading the CSS
@@ -67,7 +73,7 @@ Module.register("MMM-Videoplayer", {
 	replayVideo: function () {
 		var lastIndex = this.playedVideoArray.length - 1;
 		if (lastIndex > -1) {
-			this.video.setAttribute("src", this.playedVideoArray[lastIndex]);
+			this.video.setAttribute("src", this.normalize(this.playedVideoArray[lastIndex]));
 			this.video.load();
 			this.video.play();
 		}
@@ -96,7 +102,7 @@ Module.register("MMM-Videoplayer", {
 		}
 
 		// Sets the video to play.
-		this.video.setAttribute("src", this.videoArray[this.currentVideoIndex]);
+		this.video.setAttribute("src", this.normalize(this.videoArray[this.currentVideoIndex]));
 		// Add the played video to the played queue.
 		this.playedVideoArray.push(this.videoArray.splice(this.currentVideoIndex, 1))
 		this.video.load();
